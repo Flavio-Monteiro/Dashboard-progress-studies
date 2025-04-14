@@ -20,7 +20,30 @@ document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
     updateDashboardStats();
     renderCharts();
+    // Adicione esta linha para inicializar o menu móvel
+    initMobileMenu();
 });
+
+//função para ativar o menu hamburguer 
+// Adicione esta nova função
+function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.querySelector('.sidebar');
+    
+    mobileMenuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
+    
+    // Fechar o menu ao clicar em um item (opcional)
+    const menuItems = document.querySelectorAll('.sidebar-menu a');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+    });
+}
 
 // Tema
 function initTheme() {
