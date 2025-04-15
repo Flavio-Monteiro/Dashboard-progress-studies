@@ -818,10 +818,9 @@ function saveAtividade(e) {
 
     saveDataToStorage('atividade', atividades);
     closeModal('atividade');
-    
-    // Forçar renderização completa
-    renderAllAtividades();
+    renderAtividades();
     updateDashboardStats();
+    renderCharts();
 }
 
 function renderAtividades() {
@@ -1095,32 +1094,45 @@ function drop(e) {
     this.classList.remove('drag-over');
 
     if (draggingItem) {
-        const atividadeId = draggingItem.getAttribute('data-id');
-        const newColumn = this.closest('.kanban-column').id;
-        
-        // Mapear IDs das colunas para status
-        const statusMap = {
-            'pending-column': 'Pendente',
-            'in-progress-column': 'Em andamento',
-            'completed-column': 'Concluído'
-        };
-        
-        const newStatus = statusMap[newColumn];
+        // Verificar se estamos movendo para uma nova coluna
+        const newColumn = this.closest('.kanban-column');
+        const oldColumn = draggingItem.closest('.kanban-column');
 
-        // Atualizar no localStorage
-        let atividades = getDataFromStorage('atividade');
-        const index = atividades.findIndex(a => a.id === atividadeId);
-        
-        if (index !== -1) {
-            atividades[index].status = newStatus;
-            saveDataToStorage('atividade', atividades);
-            
-            // Renderizar novamente todas as atividades
-            renderAllAtividades();
-            updateDashboardStats();
-            
-            // Feedback visual
-            showToast(`Atividade movida para ${newStatus}`);
+        if (newColumn && oldColumn && newColumn !== oldColumn) {
+            // Mover o item para a nova coluna
+            this.querySelector('.kanban-items').appendChild(draggingItem);
+
+            // Atualizar status no LocalStorage
+            const atividadeId = draggingItem.getAttribute('data-id');
+            const newStatus = newColumn.id.replace('-column', '').replace('-', ' ');
+
+            let atividades = getDataFromStorage('atividade');
+            const atividadeIndex = atividades.findIndex(a => a.id === atividadeId);
+
+            if (atividadeIndex !== -1) {
+                // Capitalizar a primeira letra de cada palavra no status
+                const formattedStatus = newStatus.split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+
+                atividades[atividadeIndex].status = formattedStatus;
+                saveDataToStorage('atividade', atividades);
+
+                // Atualizar contadores
+                updateKanbanCounters();
+                updateDashboardStats();
+                renderCharts();
+            }
+        } else {
+            // Se não mudou de coluna, apenas reordenar
+            const afterElement = getDragAfterElement(this.querySelector('.kanban-items'), e.clientY);
+            const itemsContainer = this.querySelector('.kanban-items');
+
+            if (afterElement) {
+                itemsContainer.insertBefore(draggingItem, afterElement);
+            } else {
+                itemsContainer.appendChild(draggingItem);
+            }
         }
     }
 }
@@ -2613,78 +2625,3 @@ function exportAllToPDF() {
 initPDFExports();
 
 
-// No final do arquivo JavaScript, adicione:
-
-// Filtro para Graduação
-function initGraduacaoFilters() {
-    const searchInput = document.getElementById('search-graduacao');
-    const statusFilter = document.getElementById('filter-status-graduacao');
-    
-    if (searchInput && statusFilter) {
-        searchInput.addEventListener('input', filterGraduacao);
-        statusFilter.addEventListener('change', filterGraduacao);
-    }
-}
-
-function filterGraduacao() {
-    const searchTerm = document.getElementById('search-graduacao').value.toLowerCase();
-    const statusFilter = document.getElementById('filter-status-graduacao').value;
-    
-    const rows = document.querySelectorAll('#graduacao-list tr');
-    
-    rows.forEach(row => {
-        const nome = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        const status = row.querySelector('td:first-child').textContent;
-        
-        const matchesSearch = searchTerm === '' || nome.includes(searchTerm);
-        const matchesStatus = statusFilter === '' || status.includes(statusFilter);
-        
-        if (matchesSearch && matchesStatus) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-
-// Filtro para Atividades
-function initAtividadesFilters() {
-    const searchInput = document.getElementById('search-atividades');
-    const tipoFilter = document.getElementById('filter-tipo-atividades');
-    
-    if (searchInput && tipoFilter) {
-        searchInput.addEventListener('input', filterAtividades);
-        tipoFilter.addEventListener('change', filterAtividades);
-    }
-}
-
-function filterAtividades() {
-    const searchTerm = document.getElementById('search-atividades').value.toLowerCase();
-    const tipoFilter = document.getElementById('filter-tipo-atividades').value;
-    
-    const items = document.querySelectorAll('.kanban-item');
-    
-    items.forEach(item => {
-        const nome = item.querySelector('h4').textContent.toLowerCase();
-        const tipo = item.querySelector('p:nth-of-type(1)').textContent.replace('Tipo: ', '').trim();
-        
-        const matchesSearch = searchTerm === '' || nome.includes(searchTerm);
-        const matchesTipo = tipoFilter === '' || tipo === tipoFilter;
-        
-        if (matchesSearch && matchesTipo) {
-            item.style.display = '';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-// Adicione estas chamadas na função loadData():
-initGraduacaoFilters();
-initAtividadesFilters();
-
-
-card.addEventListener('mouseenter', () => {
-    const preview = createPreview(cardData);
-    card.appendChild(preview);
-});
