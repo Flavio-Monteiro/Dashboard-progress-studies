@@ -979,6 +979,16 @@
   min-width: 200px;
 }
 
+@media (max-width: 576px) {
+  .filters {
+      flex-direction: column;
+  }
+  
+  .filters .form-control {
+      width: 100%;
+  }
+}
+
 /* Tags */
 .note-tags {
   display: flex;
@@ -1116,3 +1126,4 @@
   width: 100%;
   box-sizing: border-box;
 }
+
