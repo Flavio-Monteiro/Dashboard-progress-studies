@@ -1073,34 +1073,32 @@
         }
 
 
-/* Substitua as regras do .grid por estas: */
+
+        /* Substitua as regras anteriores do .grid por estas: */
+
 .grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
   width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-left: 0; /* Remove qualquer margem esquerda */
 }
 
-/* Ajuste para os cards dentro do grid */
-.grid .card {
-  width: 100%;
-  margin-bottom: 0; /* Remove margem inferior extra */
-}
-
-/* Remove os ajustes anteriores para largura total */
+/* Ajuste para compensar o sidebar */
 .main-content {
-  margin-left: 250px;
-  width: calc(100% - 250px);
+  margin-left: 250px; /* Largura do sidebar */
+  width: calc(100% - 250px); /* Calcula a largura restante */
   padding: 20px;
   box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 /* Ajustes responsivos */
 @media (max-width: 992px) {
   .main-content {
-      margin-left: 70px;
+      margin-left: 70px; /* Sidebar recolhido */
       width: calc(100% - 70px);
   }
 }
@@ -1109,7 +1107,12 @@
   .main-content {
       margin-left: 0;
       width: 100%;
-      padding-top: 70px;
+      padding-top: 70px; /* Espaço para o botão mobile */
   }
 }
 
+/* Garante que os cards ocupem todo o espaço */
+.grid .card {
+  width: 100%;
+  box-sizing: border-box;
+}
