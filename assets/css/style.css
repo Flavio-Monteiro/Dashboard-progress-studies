@@ -945,3 +945,63 @@
     border-radius: 8px;
     box-shadow: var(--shadow);
   }
+
+  /* Estilos para PDF Viewer */
+.pdf-viewer-container {
+  margin: 15px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pdf-metadata {
+  padding: 10px;
+  background-color: rgba(74, 111, 165, 0.05);
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.pdf-metadata p {
+  margin-bottom: 5px;
+  font-size: 0.875rem;
+}
+
+/* Filtros */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filters .form-control {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Tags */
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.tag {
+  background-color: rgba(74, 111, 165, 0.2);
+  color: var(--primary-color);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+/* PDF Note */
+.note-pdf {
+  border-left: 4px solid #e74c3c;
+}
+
+.note-pdf .note-title::after {
+  content: " (PDF)";
+  color: #e74c3c;
+  font-size: 0.75rem;
+}

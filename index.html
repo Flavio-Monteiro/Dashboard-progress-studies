@@ -264,19 +264,34 @@
         </section>
 
         <!-- Anotações Section (hidden by default) -->
-        <section id="anotacoes-section" style="display: none;">
-            <div class="card anotation">
-                <div class="card-header">
-                    <h2>Anotações</h2>
-                    <button class="btn btn-success" id="new-anotacao-btn">
-                        <i class="fas fa-plus"></i> Nova Anotação
-                    </button>
-                </div>
-                <div class="notes-container scrollable" id="anotacoes-container">
-                    <!-- Anotações serão carregadas aqui -->
-                </div>
+<section id="anotacoes-section" style="display: none;">
+    <div class="card anotation">
+        <div class="card-header">
+            <h2>Anotações</h2>
+            <div class="actions">
+                <button class="btn btn-primary" id="import-pdf-btn">
+                    <i class="fas fa-file-import"></i> Importar PDF
+                </button>
+                <button class="btn btn-success" id="new-anotacao-btn">
+                    <i class="fas fa-plus"></i> Nova Anotação
+                </button>
             </div>
-        </section>
+        </div>
+        
+        <!-- Filtros -->
+        <div class="filters">
+            <input type="text" id="search-notes" placeholder="Buscar anotações..." class="form-control">
+            <select id="filter-tags" class="form-control">
+                <option value="">Todas as tags</option>
+                <!-- Tags serão preenchidas dinamicamente -->
+            </select>
+        </div>
+        
+        <div class="notes-container scrollable" id="anotacoes-container">
+            <!-- Anotações serão carregadas aqui -->
+        </div>
+    </div>
+</section>
 
         <!-- Pomodoro Section (hidden by default) -->
         <section id="pomodoro-section" style="display: none;">
@@ -625,7 +640,60 @@
             </form>
         </div>
     </div>
+    <!-- Modal para Importar PDF -->
+<div class="modal" id="import-pdf-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Importar PDF</h2>
+            <button class="modal-close" id="close-import-pdf-modal">&times;</button>
+        </div>
+        <form id="import-pdf-form">
+            <div class="form-group">
+                <label for="pdf-file">Selecione o arquivo PDF</label>
+                <input type="file" class="form-control" id="pdf-file" accept=".pdf" required>
+            </div>
+            <div class="form-group">
+                <label for="pdf-title">Título</label>
+                <input type="text" class="form-control" id="pdf-title" required>
+            </div>
+            <div class="form-group">
+                <label for="pdf-tags">Tags (separadas por vírgula)</label>
+                <input type="text" class="form-control" id="pdf-tags" placeholder="ex: aula, matemática, prova">
+            </div>
+            <div class="form-group">
+                <label for="pdf-description">Descrição</label>
+                <textarea class="form-control" id="pdf-description" rows="3"></textarea>
+            </div>
+            <div class="form-group text-center mt-20">
+                <button type="submit" class="btn btn-primary">Importar</button>
+                <button type="button" class="btn btn-danger" id="cancel-import-pdf">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
+<!-- Modal para Visualizar PDF -->
+<div class="modal" id="view-pdf-modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2 id="pdf-viewer-title"></h2>
+            <button class="modal-close" id="close-view-pdf-modal">&times;</button>
+        </div>
+        <div class="pdf-viewer-container">
+            <iframe id="pdf-viewer" style="width: 100%; height: 500px; border: none;"></iframe>
+        </div>
+        <div class="pdf-metadata">
+            <p><strong>Tags:</strong> <span id="pdf-viewer-tags"></span></p>
+            <p><strong>Descrição:</strong> <span id="pdf-viewer-description"></span></p>
+            <p><strong>Data de importação:</strong> <span id="pdf-viewer-date"></span></p>
+        </div>
+        <div class="text-center mt-20">
+            <button class="btn btn-danger" id="delete-pdf-btn">
+                <i class="fas fa-trash"></i> Excluir PDF
+            </button>
+        </div>
+    </div>
+</div>
     <!-- Modal para Metas SMART -->
     <div class="modal" id="meta-modal">
         <div class="modal-content">
