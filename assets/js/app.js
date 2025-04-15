@@ -818,9 +818,10 @@ function saveAtividade(e) {
 
     saveDataToStorage('atividade', atividades);
     closeModal('atividade');
-    renderAtividades();
+    
+    // Forçar renderização completa
+    renderAllAtividades();
     updateDashboardStats();
-    renderCharts();
 }
 
 function renderAtividades() {
@@ -1094,45 +1095,32 @@ function drop(e) {
     this.classList.remove('drag-over');
 
     if (draggingItem) {
-        // Verificar se estamos movendo para uma nova coluna
-        const newColumn = this.closest('.kanban-column');
-        const oldColumn = draggingItem.closest('.kanban-column');
+        const atividadeId = draggingItem.getAttribute('data-id');
+        const newColumn = this.closest('.kanban-column').id;
+        
+        // Mapear IDs das colunas para status
+        const statusMap = {
+            'pending-column': 'Pendente',
+            'in-progress-column': 'Em andamento',
+            'completed-column': 'Concluído'
+        };
+        
+        const newStatus = statusMap[newColumn];
 
-        if (newColumn && oldColumn && newColumn !== oldColumn) {
-            // Mover o item para a nova coluna
-            this.querySelector('.kanban-items').appendChild(draggingItem);
-
-            // Atualizar status no LocalStorage
-            const atividadeId = draggingItem.getAttribute('data-id');
-            const newStatus = newColumn.id.replace('-column', '').replace('-', ' ');
-
-            let atividades = getDataFromStorage('atividade');
-            const atividadeIndex = atividades.findIndex(a => a.id === atividadeId);
-
-            if (atividadeIndex !== -1) {
-                // Capitalizar a primeira letra de cada palavra no status
-                const formattedStatus = newStatus.split(' ')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
-
-                atividades[atividadeIndex].status = formattedStatus;
-                saveDataToStorage('atividade', atividades);
-
-                // Atualizar contadores
-                updateKanbanCounters();
-                updateDashboardStats();
-                renderCharts();
-            }
-        } else {
-            // Se não mudou de coluna, apenas reordenar
-            const afterElement = getDragAfterElement(this.querySelector('.kanban-items'), e.clientY);
-            const itemsContainer = this.querySelector('.kanban-items');
-
-            if (afterElement) {
-                itemsContainer.insertBefore(draggingItem, afterElement);
-            } else {
-                itemsContainer.appendChild(draggingItem);
-            }
+        // Atualizar no localStorage
+        let atividades = getDataFromStorage('atividade');
+        const index = atividades.findIndex(a => a.id === atividadeId);
+        
+        if (index !== -1) {
+            atividades[index].status = newStatus;
+            saveDataToStorage('atividade', atividades);
+            
+            // Renderizar novamente todas as atividades
+            renderAllAtividades();
+            updateDashboardStats();
+            
+            // Feedback visual
+            showToast(`Atividade movida para ${newStatus}`);
         }
     }
 }
@@ -2694,3 +2682,9 @@ function filterAtividades() {
 // Adicione estas chamadas na função loadData():
 initGraduacaoFilters();
 initAtividadesFilters();
+
+
+card.addEventListener('mouseenter', () => {
+    const preview = createPreview(cardData);
+    card.appendChild(preview);
+});
