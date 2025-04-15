@@ -30,15 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
 function initMobileMenu() {
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const sidebar = document.querySelector('.sidebar');
-    
-    mobileMenuToggle.addEventListener('click', function() {
+
+    mobileMenuToggle.addEventListener('click', function () {
         sidebar.classList.toggle('active');
     });
-    
+
     // Fechar o menu ao clicar em um item (opcional)
     const menuItems = document.querySelectorAll('.sidebar-menu a');
     menuItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             if (window.innerWidth <= 768) {
                 sidebar.classList.remove('active');
             }
@@ -141,11 +141,27 @@ function initModals() {
     document.getElementById('cancel-import-pdf').addEventListener('click', () => closeModal('import-pdf'));
     document.getElementById('import-pdf-form').addEventListener('submit', importPDF);
 
+    
+    document.getElementById('delete-pdf-btn').addEventListener('click', deletePDF);
+
+    // No initModals(), adicione:
+    document.getElementById('import-pdf-btn').addEventListener('click', () => openModal('import-pdf'));
+    document.getElementById('close-import-pdf-modal').addEventListener('click', () => closeModal('import-pdf'));
+    document.getElementById('cancel-import-pdf').addEventListener('click', () => closeModal('import-pdf'));
+    document.getElementById('import-pdf-form').addEventListener('submit', importPDF);
+
+    document.getElementById('delete-pdf-btn').addEventListener('click', deletePDF);
+
+    document.getElementById('import-pdf-btn').addEventListener('click', () => openModal('import-pdf', null));
+    document.getElementById('close-import-pdf-modal').addEventListener('click', () => closeModal('import-pdf'));
+    document.getElementById('cancel-import-pdf').addEventListener('click', () => closeModal('import-pdf'));
+    document.getElementById('import-pdf-form').addEventListener('submit', importPDF);
+
     document.getElementById('close-view-pdf-modal').addEventListener('click', () => closeModal('view-pdf'));
     document.getElementById('delete-pdf-btn').addEventListener('click', deletePDF);
 }
 
-// Adicione esta função para importar PDFs
+// Função para importar PDFs
 function importPDF(e) {
     e.preventDefault();
     
@@ -160,29 +176,57 @@ function importPDF(e) {
     }
     
     const file = fileInput.files[0];
+    
+    // Verificar se o arquivo é um PDF
+    if (file.type !== 'application/pdf') {
+        alert('Por favor, selecione um arquivo no formato PDF');
+        return;
+    }
+    
+    // Limitar o tamanho do arquivo (opcional, por exemplo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('O arquivo é muito grande. Tamanho máximo permitido: 5MB');
+        return;
+    }
+    
     const reader = new FileReader();
     
     reader.onload = function(e) {
-        const pdfData = e.target.result;
-        
-        // Criar objeto para armazenar no localStorage
-        const pdfNote = {
-            id: generateId(),
-            title: title,
-            type: 'pdf',
-            tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-            description: description,
-            pdfData: pdfData.split(',')[1], // Remove o prefixo data:application/pdf;base64,
-            createdAt: new Date().toISOString()
-        };
-        
-        // Salvar no localStorage
-        let anotacoes = getDataFromStorage('anotacao');
-        anotacoes.push(pdfNote);
-        saveDataToStorage('anotacao', anotacoes);
-        
-        closeModal('import-pdf');
-        renderAnotacoes();
+        try {
+            const pdfData = e.target.result;
+            
+            // Criar objeto para armazenar no localStorage
+            const pdfNote = {
+                id: generateId(),
+                title: title,
+                type: 'pdf',
+                tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                description: description,
+                pdfData: pdfData.split(',')[1], // Remove o prefixo data:application/pdf;base64,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Salvar no localStorage
+            let anotacoes = getDataFromStorage('anotacao');
+            anotacoes.push(pdfNote);
+            saveDataToStorage('anotacao', anotacoes);
+            
+            // Limpar o formulário
+            document.getElementById('import-pdf-form').reset();
+            
+            closeModal('import-pdf');
+            renderAnotacoes();
+            
+            // Mostrar mensagem de sucesso
+            alert('PDF importado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao importar PDF:', error);
+            alert('Ocorreu um erro ao importar o PDF. Por favor, tente novamente.');
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('Erro ao ler o arquivo. Por favor, tente novamente.');
     };
     
     reader.readAsDataURL(file);
@@ -190,28 +234,36 @@ function importPDF(e) {
 
 // Função para visualizar PDF
 function viewPDF(id) {
-    const anotacoes = getDataFromStorage('anotacao');
-    const pdfNote = anotacoes.find(note => note.id === id && note.type === 'pdf');
-    
-    if (!pdfNote) return;
-    
-    // Configurar o modal
-    document.getElementById('pdf-viewer-title').textContent = pdfNote.title;
-    document.getElementById('pdf-viewer-tags').textContent = pdfNote.tags.join(', ');
-    document.getElementById('pdf-viewer-description').textContent = pdfNote.description || 'Nenhuma descrição fornecida';
-    
-    const date = new Date(pdfNote.createdAt);
-    document.getElementById('pdf-viewer-date').textContent = date.toLocaleDateString('pt-BR');
-    
-    // Configurar o visualizador de PDF
-    const pdfViewer = document.getElementById('pdf-viewer');
-    pdfViewer.src = `data:application/pdf;base64,${pdfNote.pdfData}`;
-    
-    // Configurar o botão de excluir
-    document.getElementById('delete-pdf-btn').setAttribute('data-id', id);
-    
-    // Abrir o modal
-    openModal('view-pdf');
+    try {
+        const anotacoes = getDataFromStorage('anotacao');
+        const pdfNote = anotacoes.find(note => note.id === id && note.type === 'pdf');
+        
+        if (!pdfNote) {
+            alert('PDF não encontrado!');
+            return;
+        }
+        
+        // Configurar o modal
+        document.getElementById('pdf-viewer-title').textContent = pdfNote.title;
+        document.getElementById('pdf-viewer-tags').textContent = pdfNote.tags.join(', ');
+        document.getElementById('pdf-viewer-description').textContent = pdfNote.description || 'Nenhuma descrição fornecida';
+        
+        const date = new Date(pdfNote.createdAt);
+        document.getElementById('pdf-viewer-date').textContent = date.toLocaleDateString('pt-BR');
+        
+        // Configurar o visualizador de PDF
+        const pdfViewer = document.getElementById('pdf-viewer');
+        pdfViewer.src = `data:application/pdf;base64,${pdfNote.pdfData}`;
+        
+        // Configurar o botão de excluir
+        document.getElementById('delete-pdf-btn').setAttribute('data-id', id);
+        
+        // Abrir o modal
+        openModal('view-pdf');
+    } catch (error) {
+        console.error('Erro ao visualizar PDF:', error);
+        alert('Ocorreu um erro ao carregar o PDF. Por favor, tente novamente.');
+    }
 }
 
 // Função para excluir PDF
@@ -219,12 +271,18 @@ function deletePDF() {
     const id = document.getElementById('delete-pdf-btn').getAttribute('data-id');
     
     if (confirm('Tem certeza que deseja excluir este PDF?')) {
-        let anotacoes = getDataFromStorage('anotacao');
-        anotacoes = anotacoes.filter(note => note.id !== id);
-        saveDataToStorage('anotacao', anotacoes);
-        
-        closeModal('view-pdf');
-        renderAnotacoes();
+        try {
+            let anotacoes = getDataFromStorage('anotacao');
+            anotacoes = anotacoes.filter(note => note.id !== id);
+            saveDataToStorage('anotacao', anotacoes);
+            
+            closeModal('view-pdf');
+            renderAnotacoes();
+            alert('PDF excluído com sucesso!');
+        } catch (error) {
+            console.error('Erro ao excluir PDF:', error);
+            alert('Ocorreu um erro ao excluir o PDF. Por favor, tente novamente.');
+        }
     }
 }
 
@@ -901,14 +959,14 @@ function renderAtividades() {
 
 function createKanbanItem(atividade) {
     const item = document.createElement('div');
-item.className = 'kanban-item';
-item.setAttribute('data-id', atividade.id);
+    item.className = 'kanban-item';
+    item.setAttribute('data-id', atividade.id);
 
-// Formatar data
-const dataObj = new Date(atividade.data);
-const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+    // Formatar data
+    const dataObj = new Date(atividade.data);
+    const dataFormatada = dataObj.toLocaleDateString('pt-BR');
 
-item.innerHTML = `
+    item.innerHTML = `
     <div class="item-header">
         <h4>${atividade.nome}</h4>
         <div class="item-actions">
@@ -925,12 +983,12 @@ item.innerHTML = `
     <p><small>${getDisciplinaName(atividade.disciplina) || 'Sem disciplina'}</small></p>
 `;
 
-// Configurar eventos de drag and drop
-item.setAttribute('draggable', 'true');
-item.addEventListener('dragstart', dragStart);
-item.addEventListener('dragend', dragEnd);
+    // Configurar eventos de drag and drop
+    item.setAttribute('draggable', 'true');
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragend', dragEnd);
 
-return item;
+    return item;
 }
 
 function getDisciplinaName(id) {
@@ -1116,11 +1174,14 @@ function saveAnotacao(e) {
     const id = document.getElementById('anotacao-id').value || generateId();
     const titulo = document.getElementById('anotacao-titulo').value;
     const conteudo = document.getElementById('anotacao-conteudo').value;
+    const tags = document.getElementById('anotacao-tags').value;
 
     const anotacao = {
         id,
         titulo,
         conteudo,
+        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        type: 'text',
         createdAt: new Date().toISOString()
     };
 
@@ -1143,35 +1204,50 @@ function saveAnotacao(e) {
     renderAnotacoes();
 }
 
-// No initModals(), adicione:
-document.getElementById('import-pdf-btn').addEventListener('click', () => openModal('import-pdf'));
-document.getElementById('close-import-pdf-modal').addEventListener('click', () => closeModal('import-pdf'));
-document.getElementById('cancel-import-pdf').addEventListener('click', () => closeModal('import-pdf'));
-document.getElementById('import-pdf-form').addEventListener('submit', importPDF);
+function fillModalForm(type, id) {
+    const data = getDataFromStorage(type);
+    const item = data.find(item => item.id === id);
 
-document.getElementById('close-view-pdf-modal').addEventListener('click', () => closeModal('view-pdf'));
-document.getElementById('delete-pdf-btn').addEventListener('click', deletePDF);
+    if (!item) return;
+
+    const form = document.getElementById(`${type}-form`);
+    form.reset();
+
+    document.getElementById(`${type}-id`).value = id;
+
+    for (const key in item) {
+        if (key !== 'id' && document.getElementById(`${type}-${key}`)) {
+            if (key === 'tags' && Array.isArray(item[key])) {
+                document.getElementById(`${type}-${key}`).value = item[key].join(', ');
+            } else {
+                document.getElementById(`${type}-${key}`).value = item[key];
+            }
+        }
+    }
+}
+
+
 
 // Adicione esta função para importar PDFs
 function importPDF(e) {
     e.preventDefault();
-    
+
     const fileInput = document.getElementById('pdf-file');
     const title = document.getElementById('pdf-title').value;
     const tags = document.getElementById('pdf-tags').value;
     const description = document.getElementById('pdf-description').value;
-    
+
     if (fileInput.files.length === 0) {
         alert('Por favor, selecione um arquivo PDF');
         return;
     }
-    
+
     const file = fileInput.files[0];
     const reader = new FileReader();
-    
-    reader.onload = function(e) {
+
+    reader.onload = function (e) {
         const pdfData = e.target.result;
-        
+
         // Criar objeto para armazenar no localStorage
         const pdfNote = {
             id: generateId(),
@@ -1182,16 +1258,16 @@ function importPDF(e) {
             pdfData: pdfData.split(',')[1], // Remove o prefixo data:application/pdf;base64,
             createdAt: new Date().toISOString()
         };
-        
+
         // Salvar no localStorage
         let anotacoes = getDataFromStorage('anotacao');
         anotacoes.push(pdfNote);
         saveDataToStorage('anotacao', anotacoes);
-        
+
         closeModal('import-pdf');
         renderAnotacoes();
     };
-    
+
     reader.readAsDataURL(file);
 }
 
@@ -1199,24 +1275,24 @@ function importPDF(e) {
 function viewPDF(id) {
     const anotacoes = getDataFromStorage('anotacao');
     const pdfNote = anotacoes.find(note => note.id === id && note.type === 'pdf');
-    
+
     if (!pdfNote) return;
-    
+
     // Configurar o modal
     document.getElementById('pdf-viewer-title').textContent = pdfNote.title;
     document.getElementById('pdf-viewer-tags').textContent = pdfNote.tags.join(', ');
     document.getElementById('pdf-viewer-description').textContent = pdfNote.description || 'Nenhuma descrição fornecida';
-    
+
     const date = new Date(pdfNote.createdAt);
     document.getElementById('pdf-viewer-date').textContent = date.toLocaleDateString('pt-BR');
-    
+
     // Configurar o visualizador de PDF
     const pdfViewer = document.getElementById('pdf-viewer');
     pdfViewer.src = `data:application/pdf;base64,${pdfNote.pdfData}`;
-    
+
     // Configurar o botão de excluir
     document.getElementById('delete-pdf-btn').setAttribute('data-id', id);
-    
+
     // Abrir o modal
     openModal('view-pdf');
 }
@@ -1224,12 +1300,12 @@ function viewPDF(id) {
 // Função para excluir PDF
 function deletePDF() {
     const id = document.getElementById('delete-pdf-btn').getAttribute('data-id');
-    
+
     if (confirm('Tem certeza que deseja excluir este PDF?')) {
         let anotacoes = getDataFromStorage('anotacao');
         anotacoes = anotacoes.filter(note => note.id !== id);
         saveDataToStorage('anotacao', anotacoes);
-        
+
         closeModal('view-pdf');
         renderAnotacoes();
     }
@@ -1274,7 +1350,7 @@ function renderAnotacoes() {
     sortedAnotacoes.forEach(anotacao => {
         const note = document.createElement('div');
         note.className = `note ${anotacao.type === 'pdf' ? 'note-pdf' : ''}`;
-        
+
         // Formatar data
         const dataObj = new Date(anotacao.createdAt);
         const dataFormatada = dataObj.toLocaleDateString('pt-BR', {
@@ -1314,25 +1390,25 @@ function renderAnotacoes() {
             ${tagsHTML}
             <small class="text-muted">Criado em: ${dataFormatada}</small>
             <div class="note-actions">
-                ${anotacao.type === 'pdf' ? 
-                    `<button class="btn btn-primary btn-sm view-pdf" data-id="${anotacao.id}">
+                ${anotacao.type === 'pdf' ?
+                `<button class="btn btn-primary btn-sm view-pdf" data-id="${anotacao.id}">
                         <i class="fas fa-eye"></i>
-                    </button>` : 
-                    `<button class="btn btn-primary btn-sm edit-anotacao" data-id="${anotacao.id}">
+                    </button>` :
+                `<button class="btn btn-primary btn-sm edit-anotacao" data-id="${anotacao.id}">
                         <i class="fas fa-edit"></i>
                     </button>`
-                }
+            }
                 <button class="btn btn-danger btn-sm delete-anotacao" data-id="${anotacao.id}">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
         `;
-        
+
         note.setAttribute('data-tags', anotacao.tags ? anotacao.tags.join(',') : '');
-        note.setAttribute('data-content', anotacao.type === 'pdf' ? 
-            (anotacao.title + ' ' + (anotacao.description || '')) : 
+        note.setAttribute('data-content', anotacao.type === 'pdf' ?
+            (anotacao.title + ' ' + (anotacao.description || '')) :
             (anotacao.titulo + ' ' + anotacao.conteudo));
-        
+
         container.appendChild(note);
     });
 
@@ -1354,14 +1430,14 @@ function renderAnotacoes() {
 function filterNotes() {
     const searchTerm = document.getElementById('search-notes').value.toLowerCase();
     const selectedTag = document.getElementById('filter-tags').value;
-    
+
     document.querySelectorAll('.note').forEach(note => {
         const tags = note.getAttribute('data-tags').toLowerCase();
         const content = note.getAttribute('data-content').toLowerCase();
-        
+
         const matchesSearch = searchTerm === '' || content.includes(searchTerm);
         const matchesTag = selectedTag === '' || tags.includes(selectedTag.toLowerCase());
-        
+
         if (matchesSearch && matchesTag) {
             note.style.display = 'block';
         } else {
@@ -1415,7 +1491,7 @@ function initCalendar() {
 function renderCalendar(monthOffset = 0) {
     const calendarEl = document.getElementById('calendar');
     const lembretes = getDataFromStorage('lembrete');
-    
+
     // Limpar calendário
     calendarEl.innerHTML = '';
 
@@ -1425,8 +1501,8 @@ function renderCalendar(monthOffset = 0) {
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
-    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-                       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     const weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
     // Criar cabeçalho com navegação
@@ -1535,7 +1611,7 @@ function renderCalendar(monthOffset = 0) {
     // Dias do próximo mês (para completar a grid)
     const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
     const remainingCells = totalCells - (firstDay + daysInMonth);
-    
+
     for (let i = 1; i <= remainingCells; i++) {
         const emptyDay = document.createElement('div');
         emptyDay.className = 'calendar-day other-month';

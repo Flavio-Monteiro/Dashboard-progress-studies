@@ -1005,3 +1005,44 @@
   color: #e74c3c;
   font-size: 0.75rem;
 }
+
+  /* Estilos para os modais de PDF */
+.pdf-viewer-modal {
+  max-width: 800px;
+  width: 90%;
+}
+
+.pdf-viewer-container {
+  margin: 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pdf-metadata {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.pdf-metadata p {
+  margin: 5px 0;
+}
+
+/* Melhorar a responsividade */
+@media (max-width: 768px) {
+  .pdf-viewer-modal {
+      width: 95%;
+  }
+  
+  .pdf-viewer-container {
+      height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdf-viewer-container {
+      height: 300px;
+  }
+}
