@@ -527,6 +527,9 @@ function loadData() {
         );
     }
 
+    const atividades = getDataFromStorage("atividade");
+    console.log("Atividades no localStorage:", atividades);
+
     // Carregar dados nas seções
     renderDisciplinas();
     renderExtensao();
@@ -959,8 +962,8 @@ function saveAtividade(e) {
     let atividades = getDataFromStorage("atividade");
 
     if (document.getElementById("atividade-id").value) {
-        // Atualizar
         const index = atividades.findIndex((a) => a.id === id);
+        // Atualizar
         if (index !== -1) {
             atividades[index] = atividade;
         }
@@ -972,12 +975,14 @@ function saveAtividade(e) {
     saveDataToStorage("atividade", atividades);
     closeModal("atividade");
     renderAtividades();
+    initKanban(); // Adicione esta linha
     updateDashboardStats();
     renderCharts();
 }
 
 function renderAtividades() {
     const atividades = getDataFromStorage("atividade");
+    console.log("Renderizando atividades:", atividades)
 
     // Renderizar no kanban
     const pendingItems = document.getElementById("pending-items");
@@ -1285,6 +1290,8 @@ function drop(e) {
         const newColumn = this.closest(".kanban-column");
         const oldColumn = draggingItem.closest(".kanban-column");
 
+        let atividades = getDataFromStorage("atividade");
+        const atividadeIndex = atividades.findIndex((a) => a.id === atividadeId);
         if (newColumn && oldColumn && newColumn !== oldColumn) {
             // Mover o item para a nova coluna
             this.querySelector(".kanban-items").appendChild(draggingItem);
@@ -1293,8 +1300,6 @@ function drop(e) {
             const atividadeId = draggingItem.getAttribute("data-id");
             const newStatus = newColumn.id.replace("-column", "").replace("-", " ");
 
-            let atividades = getDataFromStorage("atividade");
-            const atividadeIndex = atividades.findIndex((a) => a.id === atividadeId);
 
             if (atividadeIndex !== -1) {
                 // Capitalizar a primeira letra de cada palavra no status

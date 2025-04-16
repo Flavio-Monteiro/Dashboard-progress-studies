@@ -1217,3 +1217,19 @@
       grid-template-columns: 1fr;
   }
 }
+
+
+
+.complete-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.complete-btn:hover {
+  background-color: #218838;
+}
+
+.kanban-item .item-actions {
+  display: flex;
+  gap: 5px;
+}
