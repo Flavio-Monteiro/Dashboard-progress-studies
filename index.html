@@ -128,21 +128,27 @@
                         <button class="btn btn-primary" id="export-graduacao-pdf">
                             <i class="fas fa-file-pdf"></i> Exportar PDF
                         </button>
+                        <button class="btn btn-success" id="export-graduacao-xls">
+                            <i class="fas fa-file-excel"></i> Exportar XLS
+                        </button>
+                        <button class="btn btn-info" id="import-graduacao-xls">
+                            <i class="fas fa-file-import"></i> Importar XLS
+                        </button>
                         <button class="btn btn-success" id="new-graduacao-btn">
                             <i class="fas fa-plus"></i> Nova Disciplina
                         </button>
                     </div>
                 </div>
                 <!-- Adicione este filtro -->
-    <div class="filters">
-        <input type="text" id="search-graduacao" placeholder="Buscar disciplinas..." class="form-control">
-        <select id="filter-status-graduacao" class="form-control">
-            <option value="">Todos os status</option>
-            <option value="Não iniciada">Não iniciada</option>
-            <option value="Em curso">Em curso</option>
-            <option value="Concluída">Concluída</option>
-        </select>
-    </div>
+                <div class="filters">
+                    <input type="text" id="search-graduacao" placeholder="Buscar disciplinas..." class="form-control">
+                    <select id="filter-status-graduacao" class="form-control">
+                        <option value="">Todos os status</option>
+                        <option value="Não iniciada">Não iniciada</option>
+                        <option value="Em curso">Em curso</option>
+                        <option value="Concluída">Concluída</option>
+                    </select>
+                </div>
                 <div class="progress-container">
                     <div class="progress-bar" id="graduacao-progress" style="width: 0%">0%</div>
                 </div>
@@ -173,284 +179,290 @@
         <section id="extensao-section" style="display: none;">
             <div class="card">
                 <div class="card-header">
-                    <h2>Cursos de Extensão</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="export-extensao-pdf">
-                            <i class="fas fa-file-pdf"></i> Exportar PDF
-                        </button>
-                        <button class="btn btn-success" id="new-extensao-btn">
-                            <i class="fas fa-plus"></i> Novo Curso
-                        </button>
-                    </div>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="extensao-progress" style="width: 0%">0%</div>
-                </div>
-                <p class="text-center mt-10" id="extensao-stats">0 cursos cadastrados | 0 concluídos</p>
-
-                <div class="scrollable">
-                    <table class="table" id="extensao-table">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Curso</th>
-                                <th>Carga Horária</th>
-                                <th>Horas Estudadas</th>
-                                <th>Progresso</th>
-                                <th>Situação</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="extensao-list">
-                            <!-- Cursos serão carregadas aqui -->
-                        </tbody>
-                    </table>
+                <h2>Cursos de Extensão</h2>
+                <div class="actions">
+                    <button class="btn btn-primary" id="export-extensao-pdf">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button class="btn btn-success" id="export-extensao-xls">
+                        <i class="fas fa-file-excel"></i> Exportar XLS
+                    </button>
+                    <button class="btn btn-info" id="import-extensao-xls">
+                        <i class="fas fa-file-import"></i> Importar XLS
+                    </button>
+                    <button class="btn btn-success" id="new-extensao-btn">
+                        <i class="fas fa-plus"></i> Novo Curso
+                    </button>
                 </div>
             </div>
-        </section>
+            <div class="progress-container">
+                <div class="progress-bar" id="extensao-progress" style="width: 0%">0%</div>
+            </div>
+            <p class="text-center mt-10" id="extensao-stats">0 cursos cadastrados | 0 concluídos</p>
 
-        <!-- Atividades Section (hidden by default) -->
-        <section id="atividades-section" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Atividades (Kanban)</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="export-atividades-pdf">
-                            <i class="fas fa-file-pdf"></i> Exportar PDF
-                        </button>
-                        <button class="btn btn-success" id="new-atividade-kanban-btn">
-                            <i class="fas fa-plus"></i> Nova Atividade
-                        </button>
-                    </div>
-                </div>
-                 <!-- Adicione este filtro -->
-    <div class="filters">
-        <input type="text" id="search-atividades" placeholder="Buscar atividades..." class="form-control">
-        <select id="filter-tipo-atividades" class="form-control">
-            <option value="">Todos os tipos</option>
-            <option value="Trabalho">Trabalho</option>
-            <option value="Prova">Prova</option>
-            <option value="Projeto">Projeto</option>
-            <option value="Exercício">Exercício</option>
-            <option value="Leitura">Leitura</option>
-            <option value="Outro">Outro</option>
-        </select>
+            <div class="scrollable">
+                <table class="table" id="extensao-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Curso</th>
+                            <th>Carga Horária</th>
+                            <th>Horas Estudadas</th>
+                            <th>Progresso</th>
+                            <th>Situação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="extensao-list">
+                        <!-- Cursos serão carregadas aqui -->
+                    </tbody>
+                </table>
+            </div>
     </div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="atividades-progress" style="width: 0%">0%</div>
-                </div>
-                <p class="text-center mt-10" id="atividades-stats">0 atividades cadastradas | 0 concluídas</p>
+    </section>
 
-                <div class="kanban-board" id="kanban-board">
-                    <div class="kanban-column" id="pending-column">
-                        <div class="kanban-column-header">
-                            <h3>Pendente</h3>
-                            <span class="badge badge-primary" id="pending-count">0</span>
-                        </div>
-                        <div class="kanban-items" id="pending-items">
-                            <!-- Atividades pendentes serão carregadas aqui -->
-                        </div>
-                    </div>
-                    <div class="kanban-column" id="in-progress-column">
-                        <div class="kanban-column-header">
-                            <h3>Em Andamento</h3>
-                            <span class="badge badge-warning" id="in-progress-count">0</span>
-                        </div>
-                        <div class="kanban-items" id="in-progress-items">
-                            <!-- Atividades em andamento serão carregadas aqui -->
-                        </div>
-                    </div>
-                    <div class="kanban-column" id="completed-column">
-                        <div class="kanban-column-header">
-                            <h3>Concluído</h3>
-                            <span class="badge badge-success" id="completed-count">0</span>
-                        </div>
-                        <div class="kanban-items" id="completed-items">
-                            <!-- Atividades concluídas serão carregadas aqui -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Calendário Section (hidden by default) -->
-        <section id="calendario-section" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Calendário</h2>
-                    <button class="btn btn-success" id="new-lembrete-btn">
-                        <i class="fas fa-plus"></i> Novo Lembrete
+    <!-- Atividades Section (hidden by default) -->
+    <section id="atividades-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2>Atividades (Kanban)</h2>
+                <div class="actions">
+                    <button class="btn btn-primary" id="export-atividades-pdf">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button class="btn btn-success" id="new-atividade-kanban-btn">
+                        <i class="fas fa-plus"></i> Nova Atividade
                     </button>
                 </div>
-                <div id="calendar"></div>
             </div>
-        </section>
-
-        <!-- Anotações Section (hidden by default) -->
-        <section id="anotacoes-section" style="display: none;">
-            <div class="card anotation">
-                <div class="card-header">
-                    <h2>Anotações</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="import-pdf-btn">
-                            <i class="fas fa-file-import"></i> Importar PDF
-                        </button>
-                        <button class="btn btn-success" id="new-anotacao-btn">
-                            <i class="fas fa-plus"></i> Nova Anotação
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Filtros -->
-                <div class="filters">
-                    <input type="text" id="search-notes" placeholder="Buscar anotações..." class="form-control">
-                    <select id="filter-tags" class="form-control">
-                        <option value="">Todas as tags</option>
-                        <!-- Tags serão preenchidas dinamicamente -->
-                    </select>
-                </div>
-
-                <div class="notes-container scrollable" id="anotacoes-container">
-                    <!-- Anotações serão carregadas aqui -->
-                </div>
+            <!-- Adicione este filtro -->
+            <div class="filters">
+                <input type="text" id="search-atividades" placeholder="Buscar atividades..." class="form-control">
+                <select id="filter-tipo-atividades" class="form-control">
+                    <option value="">Todos os tipos</option>
+                    <option value="Trabalho">Trabalho</option>
+                    <option value="Prova">Prova</option>
+                    <option value="Projeto">Projeto</option>
+                    <option value="Exercício">Exercício</option>
+                    <option value="Leitura">Leitura</option>
+                    <option value="Outro">Outro</option>
+                </select>
             </div>
-        </section>
+            <div class="progress-container">
+                <div class="progress-bar" id="atividades-progress" style="width: 0%">0%</div>
+            </div>
+            <p class="text-center mt-10" id="atividades-stats">0 atividades cadastradas | 0 concluídas</p>
 
-        <!-- Pomodoro Section (hidden by default) -->
-        <section id="pomodoro-section" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Pomodoro Timer</h2>
+            <div class="kanban-board" id="kanban-board">
+                <div class="kanban-column" id="pending-column">
+                    <div class="kanban-column-header">
+                        <h3>Pendente</h3>
+                        <span class="badge badge-primary" id="pending-count">0</span>
+                    </div>
+                    <div class="kanban-items" id="pending-items">
+                        <!-- Atividades pendentes serão carregadas aqui -->
+                    </div>
                 </div>
-                <div class="pomodoro-container">
-                    <div class="timer-settings">
-                        <div class="timer-setting">
-                            <label for="focus-time">Foco (min)</label>
-                            <input type="number" id="focus-time" value="25" min="1">
-                        </div>
-                        <div class="timer-setting">
-                            <label for="short-break">Pausa Curta (min)</label>
-                            <input type="number" id="short-break" value="5" min="1">
-                        </div>
-                        <div class="timer-setting">
-                            <label for="long-break">Pausa Longa (min)</label>
-                            <input type="number" id="long-break" value="15" min="1">
-                        </div>
+                <div class="kanban-column" id="in-progress-column">
+                    <div class="kanban-column-header">
+                        <h3>Em Andamento</h3>
+                        <span class="badge badge-warning" id="in-progress-count">0</span>
                     </div>
-
-                    <div class="timer-display" id="timer-display">25:00</div>
-
-                    <div class="timer-controls">
-                        <button class="btn btn-primary" id="start-timer">
-                            <i class="fas fa-play"></i> Iniciar
-                        </button>
-                        <button class="btn btn-warning" id="pause-timer" disabled>
-                            <i class="fas fa-pause"></i> Pausar
-                        </button>
-                        <button class="btn btn-danger" id="reset-timer" disabled>
-                            <i class="fas fa-stop"></i> Resetar
-                        </button>
+                    <div class="kanban-items" id="in-progress-items">
+                        <!-- Atividades em andamento serão carregadas aqui -->
                     </div>
-
-                    <div class="timer-info">
-                        <p>Sessão: <span id="session-type">Foco</span></p>
-                        <p>Ciclos completos: <span id="cycles-count">0</span></p>
-                        <p>Tempo total focado: <span id="total-focused-time">00:00:00</span></p>
+                </div>
+                <div class="kanban-column" id="completed-column">
+                    <div class="kanban-column-header">
+                        <h3>Concluído</h3>
+                        <span class="badge badge-success" id="completed-count">0</span>
+                    </div>
+                    <div class="kanban-items" id="completed-items">
+                        <!-- Atividades concluídas serão carregadas aqui -->
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Metas SMART Section (hidden by default) -->
-        <section id="metas-section" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Metas SMART</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="export-metas-pdf">
-                            <i class="fas fa-file-pdf"></i> Exportar PDF
-                        </button>
-                        <button class="btn btn-success" id="new-meta-btn">
-                            <i class="fas fa-plus"></i> Nova Meta
-                        </button>
-                    </div>
-                </div>
-                <div class="scrollable">
-                    <table class="table" id="metas-table">
-                        <thead>
-                            <tr>
-                                <th>Meta</th>
-                                <th>Descrição</th>
-                                <th>Progresso</th>
-                                <th>Prazo</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="metas-list">
-                            <!-- Metas serão carregadas aqui -->
-                        </tbody>
-                    </table>
+    <!-- Calendário Section (hidden by default) -->
+    <section id="calendario-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2>Calendário</h2>
+                <button class="btn btn-success" id="new-lembrete-btn">
+                    <i class="fas fa-plus"></i> Novo Lembrete
+                </button>
+            </div>
+            <div id="calendar"></div>
+        </div>
+    </section>
+
+    <!-- Anotações Section (hidden by default) -->
+    <section id="anotacoes-section" style="display: none;">
+        <div class="card anotation">
+            <div class="card-header">
+                <h2>Anotações</h2>
+                <div class="actions">
+                    <button class="btn btn-primary" id="import-pdf-btn">
+                        <i class="fas fa-file-import"></i> Importar PDF
+                    </button>
+                    <button class="btn btn-success" id="new-anotacao-btn">
+                        <i class="fas fa-plus"></i> Nova Anotação
+                    </button>
                 </div>
             </div>
-        </section>
 
-        <!-- Estatísticas Section (hidden by default) -->
-        <section id="estatisticas-section" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Estatísticas e Desempenho</h2>
-                    <button class="btn btn-primary" id="export-all-pdf">
-                        <i class="fas fa-file-pdf"></i> Exportar Tudo em PDF
+            <!-- Filtros -->
+            <div class="filters">
+                <input type="text" id="search-notes" placeholder="Buscar anotações..." class="form-control">
+                <select id="filter-tags" class="form-control">
+                    <option value="">Todas as tags</option>
+                    <!-- Tags serão preenchidas dinamicamente -->
+                </select>
+            </div>
+
+            <div class="notes-container scrollable" id="anotacoes-container">
+                <!-- Anotações serão carregadas aqui -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Pomodoro Section (hidden by default) -->
+    <section id="pomodoro-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2>Pomodoro Timer</h2>
+            </div>
+            <div class="pomodoro-container">
+                <div class="timer-settings">
+                    <div class="timer-setting">
+                        <label for="focus-time">Foco (min)</label>
+                        <input type="number" id="focus-time" value="25" min="1">
+                    </div>
+                    <div class="timer-setting">
+                        <label for="short-break">Pausa Curta (min)</label>
+                        <input type="number" id="short-break" value="5" min="1">
+                    </div>
+                    <div class="timer-setting">
+                        <label for="long-break">Pausa Longa (min)</label>
+                        <input type="number" id="long-break" value="15" min="1">
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-display">25:00</div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-primary" id="start-timer">
+                        <i class="fas fa-play"></i> Iniciar
+                    </button>
+                    <button class="btn btn-warning" id="pause-timer" disabled>
+                        <i class="fas fa-pause"></i> Pausar
+                    </button>
+                    <button class="btn btn-danger" id="reset-timer" disabled>
+                        <i class="fas fa-stop"></i> Resetar
                     </button>
                 </div>
 
+                <div class="timer-info">
+                    <p>Sessão: <span id="session-type">Foco</span></p>
+                    <p>Ciclos completos: <span id="cycles-count">0</span></p>
+                    <p>Tempo total focado: <span id="total-focused-time">00:00:00</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metas SMART Section (hidden by default) -->
+    <section id="metas-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2>Metas SMART</h2>
+                <div class="actions">
+                    <button class="btn btn-primary" id="export-metas-pdf">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button class="btn btn-success" id="new-meta-btn">
+                        <i class="fas fa-plus"></i> Nova Meta
+                    </button>
+                </div>
+            </div>
+            <div class="scrollable">
+                <table class="table" id="metas-table">
+                    <thead>
+                        <tr>
+                            <th>Meta</th>
+                            <th>Descrição</th>
+                            <th>Progresso</th>
+                            <th>Prazo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metas-list">
+                        <!-- Metas serão carregadas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estatísticas Section (hidden by default) -->
+    <section id="estatisticas-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2>Estatísticas e Desempenho</h2>
+                <button class="btn btn-primary" id="export-all-pdf">
+                    <i class="fas fa-file-pdf"></i> Exportar Tudo em PDF
+                </button>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-header">Disciplinas Mais Estudadas</h3>
+                    <div class="chart-container">
+                        <canvas id="top-disciplinas-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-header">Distribuição de Tempo</h3>
+                    <div class="chart-container">
+                        <canvas id="time-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-header">Progresso Mensal</h3>
+                <div class="chart-container">
+                    <canvas id="monthly-progress-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-header">Resumo de Produtividade</h3>
                 <div class="grid">
                     <div class="card">
-                        <h3 class="card-header">Disciplinas Mais Estudadas</h3>
-                        <div class="chart-container">
-                            <canvas id="top-disciplinas-chart"></canvas>
-                        </div>
+                        <h4>Tempo Total Focado</h4>
+                        <p class="text-center" id="total-focused-stat">00:00:00</p>
                     </div>
-
                     <div class="card">
-                        <h3 class="card-header">Distribuição de Tempo</h3>
-                        <div class="chart-container">
-                            <canvas id="time-distribution-chart"></canvas>
-                        </div>
+                        <h4>Disciplinas Concluídas</h4>
+                        <p class="text-center" id="completed-disciplinas-stat">0</p>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="card-header">Progresso Mensal</h3>
-                    <div class="chart-container">
-                        <canvas id="monthly-progress-chart"></canvas>
+                    <div class="card">
+                        <h4>Cursos Concluídos</h4>
+                        <p class="text-center" id="completed-cursos-stat">0</p>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="card-header">Resumo de Produtividade</h3>
-                    <div class="grid">
-                        <div class="card">
-                            <h4>Tempo Total Focado</h4>
-                            <p class="text-center" id="total-focused-stat">00:00:00</p>
-                        </div>
-                        <div class="card">
-                            <h4>Disciplinas Concluídas</h4>
-                            <p class="text-center" id="completed-disciplinas-stat">0</p>
-                        </div>
-                        <div class="card">
-                            <h4>Cursos Concluídos</h4>
-                            <p class="text-center" id="completed-cursos-stat">0</p>
-                        </div>
-                        <div class="card">
-                            <h4>Atividades Concluídas</h4>
-                            <p class="text-center" id="completed-atividades-stat">0</p>
-                        </div>
+                    <div class="card">
+                        <h4>Atividades Concluídas</h4>
+                        <p class="text-center" id="completed-atividades-stat">0</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
     </div>
 
     <!-- Modal para Disciplinas -->
@@ -669,67 +681,92 @@
             </form>
         </div>
     </div>
+    <div class="modal" id="import-xls-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="import-xls-modal-title">Importar XLS</h2>
+                <button class="modal-close" id="close-import-xls-modal">&times;</button>
+            </div>
+            <form id="import-xls-form">
+                <input type="hidden" id="import-xls-type">
+                <div class="form-group">
+                    <label for="xls-file">Selecione o arquivo XLS/XLSX</label>
+                    <input type="file" class="form-control" id="xls-file" accept=".xls,.xlsx" required>
+                    <small class="text-muted">O arquivo deve seguir a estrutura: Status | Nome | Carga Horária | Horas Estudadas | Progresso | Situação</small>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="replace-data"> Substituir dados existentes?
+                    </label>
+                </div>
+                <div class="form-group text-center mt-20">
+                    <button type="submit" class="btn btn-primary">Importar</button>
+                    <button type="button" class="btn btn-danger" id="cancel-import-xls">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Modal para Importar PDF - Já está correto -->
-<div class="modal" id="import-pdf-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Importar PDF</h2>
-            <button class="modal-close" id="close-import-pdf-modal">&times;</button>
+    <div class="modal" id="import-pdf-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Importar PDF</h2>
+                <button class="modal-close" id="close-import-pdf-modal">&times;</button>
+            </div>
+            <form id="import-pdf-form">
+                <div class="form-group">
+                    <label for="pdf-file">Selecione o arquivo PDF</label>
+                    <input type="file" class="form-control" id="pdf-file" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="pdf-title">Título</label>
+                    <input type="text" class="form-control" id="pdf-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="pdf-tags">Tags (separadas por vírgula)</label>
+                    <input type="text" class="form-control" id="pdf-tags" placeholder="ex: aula, matemática, prova">
+                </div>
+                <div class="form-group">
+                    <label for="pdf-description">Descrição</label>
+                    <textarea class="form-control" id="pdf-description" rows="3"></textarea>
+                </div>
+                <div class="form-group text-center mt-20">
+                    <button type="submit" class="btn btn-primary">Importar</button>
+                    <button type="button" class="btn btn-danger" id="cancel-import-pdf">Cancelar</button>
+                </div>
+            </form>
         </div>
-        <form id="import-pdf-form">
-            <div class="form-group">
-                <label for="pdf-file">Selecione o arquivo PDF</label>
-                <input type="file" class="form-control" id="pdf-file" accept=".pdf" required>
-            </div>
-            <div class="form-group">
-                <label for="pdf-title">Título</label>
-                <input type="text" class="form-control" id="pdf-title" required>
-            </div>
-            <div class="form-group">
-                <label for="pdf-tags">Tags (separadas por vírgula)</label>
-                <input type="text" class="form-control" id="pdf-tags" placeholder="ex: aula, matemática, prova">
-            </div>
-            <div class="form-group">
-                <label for="pdf-description">Descrição</label>
-                <textarea class="form-control" id="pdf-description" rows="3"></textarea>
-            </div>
-            <div class="form-group text-center mt-20">
-                <button type="submit" class="btn btn-primary">Importar</button>
-                <button type="button" class="btn btn-danger" id="cancel-import-pdf">Cancelar</button>
-            </div>
-        </form>
     </div>
-</div>
 
-<!-- Modal para Visualizar PDF - Versão melhorada -->
-<div class="modal" id="view-pdf-modal">
-    <div class="modal-content pdf-viewer-modal">
-        <div class="modal-header">
-            <h2 id="pdf-viewer-title"></h2>
-            <button class="modal-close" id="close-view-pdf-modal">&times;</button>
-        </div>
-        
-        <div class="pdf-metadata">
-            <p><strong>Tags:</strong> <span id="pdf-viewer-tags"></span></p>
-            <p><strong>Descrição:</strong> <span id="pdf-viewer-description"></span></p>
-            <p><strong>Data de importação:</strong> <span id="pdf-viewer-date"></span></p>
-        </div>
-        
-        <div class="pdf-viewer-container">
-            <object id="pdf-viewer" type="application/pdf" width="100%" height="500px">
-                <p>Seu navegador não suporta visualização de PDF. 
-                   <a id="pdf-download-link" href="#" download>Clique aqui para baixar</a>.
-                </p>
-            </object>
-        </div>
-        
-        <div class="text-center mt-20">
-            <button class="btn btn-danger" id="delete-pdf-btn">
-                <i class="fas fa-trash"></i> Excluir PDF
-            </button>
+    <!-- Modal para Visualizar PDF - Versão melhorada -->
+    <div class="modal" id="view-pdf-modal">
+        <div class="modal-content pdf-viewer-modal">
+            <div class="modal-header">
+                <h2 id="pdf-viewer-title"></h2>
+                <button class="modal-close" id="close-view-pdf-modal">&times;</button>
+            </div>
+
+            <div class="pdf-metadata">
+                <p><strong>Tags:</strong> <span id="pdf-viewer-tags"></span></p>
+                <p><strong>Descrição:</strong> <span id="pdf-viewer-description"></span></p>
+                <p><strong>Data de importação:</strong> <span id="pdf-viewer-date"></span></p>
+            </div>
+
+            <div class="pdf-viewer-container">
+                <object id="pdf-viewer" type="application/pdf" width="100%" height="500px">
+                    <p>Seu navegador não suporta visualização de PDF.
+                        <a id="pdf-download-link" href="#" download>Clique aqui para baixar</a>.
+                    </p>
+                </object>
+            </div>
+
+            <div class="text-center mt-20">
+                <button class="btn btn-danger" id="delete-pdf-btn">
+                    <i class="fas fa-trash"></i> Excluir PDF
+                </button>
+            </div>
         </div>
     </div>
-</div>
     <!-- Modal para Metas SMART -->
     <div class="modal" id="meta-modal">
         <div class="modal-content">
@@ -784,6 +821,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="./assets/js/app.js"></script>
 
 </body>

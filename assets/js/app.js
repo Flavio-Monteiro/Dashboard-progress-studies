@@ -159,6 +159,14 @@ function initModals() {
 
     document.getElementById('close-view-pdf-modal').addEventListener('click', () => closeModal('view-pdf'));
     document.getElementById('delete-pdf-btn').addEventListener('click', deletePDF);
+    document.getElementById('export-graduacao-xls').addEventListener('click', () => exportToXLS('disciplina'));
+    document.getElementById('import-graduacao-xls').addEventListener('click', () => openImportModal('disciplina'));
+    document.getElementById('export-extensao-xls').addEventListener('click', () => exportToXLS('extensao'));
+    document.getElementById('import-extensao-xls').addEventListener('click', () => openImportModal('extensao'));
+
+    document.getElementById('close-import-xls-modal').addEventListener('click', closeImportXLSModal);
+    document.getElementById('cancel-import-xls').addEventListener('click', closeImportXLSModal);
+    document.getElementById('import-xls-form').addEventListener('submit', importFromXLS);
 }
 
 // Função para importar PDFs
@@ -2621,7 +2629,142 @@ function exportAllToPDF() {
     doc.save(`relatorio_estudos_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 
+
+
+
+// Adicione estas funções no JavaScript
+function openImportModal(type) {
+    const modal = document.getElementById('import-xls-modal');
+    document.getElementById('import-xls-type').value = type;
+    document.getElementById('import-xls-modal-title').textContent = `Importar XLS - ${type === 'disciplina' ? 'Graduação' : 'Extensão'}`;
+    document.getElementById('import-xls-form').reset();
+    modal.classList.add('active');
+}
+
+function closeImportXLSModal() {
+    document.getElementById('import-xls-modal').classList.remove('active');
+}
+
+// / Função para exportar para XLS
+function exportToXLS(type) {
+    const data = getDataFromStorage(type);
+    const fileName = type === 'disciplina' ? 'disciplinas_graduacao' : 'cursos_extensao';
+    
+    // Criar cabeçalhos
+    const headers = ['Status', type === 'disciplina' ? 'Disciplina' : 'Curso', 'Carga Horária', 'Horas Estudadas', 'Progresso', 'Situação'];
+    
+    // Criar dados formatados
+    const rows = data.map(item => [
+        item.status,
+        item.nome,
+        item.carga,
+        item.estudadas,
+        item.progresso,
+        item.situacao || ''
+    ]);
+    
+    // Criar workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    XLSX.utils.book_append_sheet(wb, ws, type === 'disciplina' ? 'Disciplinas' : 'Cursos');
+    
+    // Exportar arquivo
+    XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
+
+// Função para importar de XLS
+function importFromXLS(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('xls-file');
+    const type = document.getElementById('import-xls-type').value;
+    const replaceData = document.getElementById('replace-data').checked;
+    
+    if (fileInput.files.length === 0) {
+        alert('Por favor, selecione um arquivo XLS/XLSX');
+        return;
+    }
+    
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            
+            // Verificar cabeçalhos
+            const headers = jsonData[0].map(h => h.toString().toLowerCase());
+            const expectedHeaders = ['status', type === 'disciplina' ? 'disciplina' : 'curso', 'carga horária', 'horas estudadas', 'progresso', 'situação'];
+            
+            if (!expectedHeaders.every((h, i) => headers[i].includes(h.toLowerCase()))) {
+                alert('O arquivo não segue a estrutura esperada. Verifique os cabeçalhos.');
+                return;
+            }
+            
+            // Processar linhas de dados
+            const items = [];
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                if (!row || row.length < 5) continue;
+                
+                const item = {
+                    id: generateId(),
+                    nome: row[1]?.toString() || '',
+                    carga: parseInt(row[2]) || 0,
+                    estudadas: parseInt(row[3]) || 0,
+                    status: row[0]?.toString() || 'Não iniciada',
+                    progresso: parseInt(row[4]) || 0,
+                    situacao: row[5]?.toString() || ''
+                };
+                
+                // Ajustar progresso se não estiver correto
+                if (item.progresso === 0 && item.carga > 0) {
+                    item.progresso = Math.round((item.estudadas / item.carga) * 100);
+                }
+                
+                items.push(item);
+            }
+            
+            if (items.length === 0) {
+                alert('Nenhum dado válido encontrado no arquivo.');
+                return;
+            }
+            
+            // Salvar dados
+            if (replaceData) {
+                saveDataToStorage(type, items);
+            } else {
+                const existingData = getDataFromStorage(type);
+                saveDataToStorage(type, [...existingData, ...items]);
+            }
+            
+            closeImportXLSModal();
+            
+            // Atualizar a visualização
+            if (type === 'disciplina') {
+                renderDisciplinas();
+            } else {
+                renderExtensao();
+            }
+            
+            updateDashboardStats();
+            renderCharts();
+            
+            alert(`${items.length} ${type === 'disciplina' ? 'disciplinas' : 'cursos'} importados com sucesso!`);
+        } catch (error) {
+            console.error('Erro ao importar XLS:', error);
+            alert('Ocorreu um erro ao importar o arquivo. Verifique o formato e tente novamente.');
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('Erro ao ler o arquivo. Por favor, tente novamente.');
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
 // Inicializar exportações PDF
 initPDFExports();
-
-
