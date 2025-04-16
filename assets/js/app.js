@@ -2767,4 +2767,75 @@ function importFromXLS(e) {
     reader.readAsArrayBuffer(file);
 }
 // Inicializar exportações PDF
+// No final do arquivo JavaScript, adicione:
+
+// Filtro para Graduação
+function initGraduacaoFilters() {
+    const searchInput = document.getElementById('search-graduacao');
+    const statusFilter = document.getElementById('filter-status-graduacao');
+    
+    if (searchInput && statusFilter) {
+        searchInput.addEventListener('input', filterGraduacao);
+        statusFilter.addEventListener('change', filterGraduacao);
+    }
+}
+
+function filterGraduacao() {
+    const searchTerm = document.getElementById('search-graduacao').value.toLowerCase();
+    const statusFilter = document.getElementById('filter-status-graduacao').value;
+    
+    const rows = document.querySelectorAll('#graduacao-list tr');
+    
+    rows.forEach(row => {
+        const nome = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const status = row.querySelector('td:first-child').textContent;
+        
+        const matchesSearch = searchTerm === '' || nome.includes(searchTerm);
+        const matchesStatus = statusFilter === '' || status.includes(statusFilter);
+        
+        if (matchesSearch && matchesStatus) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Filtro para Atividades
+function initAtividadesFilters() {
+    const searchInput = document.getElementById('search-atividades');
+    const tipoFilter = document.getElementById('filter-tipo-atividades');
+    
+    if (searchInput && tipoFilter) {
+        searchInput.addEventListener('input', filterAtividades);
+        tipoFilter.addEventListener('change', filterAtividades);
+    }
+}
+
+function filterAtividades() {
+    const searchTerm = document.getElementById('search-atividades').value.toLowerCase();
+    const tipoFilter = document.getElementById('filter-tipo-atividades').value;
+    
+    const items = document.querySelectorAll('.kanban-item');
+    
+    items.forEach(item => {
+        const nome = item.querySelector('h4').textContent.toLowerCase();
+        const tipo = item.querySelector('p:nth-of-type(1)').textContent.replace('Tipo: ', '').trim();
+        
+        const matchesSearch = searchTerm === '' || nome.includes(searchTerm);
+        const matchesTipo = tipoFilter === '' || tipo === tipoFilter;
+        
+        if (matchesSearch && matchesTipo) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// Adicione estas chamadas na função loadData():
+initGraduacaoFilters();
+initAtividadesFilters();
+
+
 initPDFExports();
