@@ -1134,3 +1134,48 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
+
+
+/* Adicione isso ao seu arquivo CSS */
+
+/* Estilo específico para os cards de progresso */
+.cards-progresso {
+  height: 250px; /* Altura fixa */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container do gráfico com altura fixa */
+#activities-chart-container {
+  height: 150px; /* Altura reduzida para o gráfico */
+  width: 100%;
+}
+
+/* Ajuste para o canvas do gráfico */
+#activities-chart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Container da barra de progresso geral */
+.progress-container {
+  margin: 10px 0;
+}
+
+/* Ajuste para o conteúdo abaixo da barra de progresso */
+.d-flex.justify-between.mt-10 {
+  margin-top: 15px;
+  padding: 0 10px;
+}
+
+/* Se quiser tornar os cards ainda menores em telas pequenas */
+@media (max-width: 768px) {
+  .cards-progresso {
+      height: auto; /* Altura automática em telas pequenas */
+      min-height: 220px;
+  }
+  
+  #activities-chart-container {
+      height: 120px;
+  }
+}
