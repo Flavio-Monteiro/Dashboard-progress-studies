@@ -252,7 +252,10 @@
     justify-content: center;
     font-size: 0.75rem;
     color: white;
-    padding: 10px;
+   font-weight: bold;
+   font-size: 1em;
+   
+    
     
   }
   
@@ -937,9 +940,9 @@
   }
   
   /* Estilos específicos para cards de progresso */
-  .cards-progresso {
+  /* .cards-progresso {
     border: 1px solid rgba(146, 146, 146, 0.625);
-  }
+  } */
   
   /* Estilo para seção de anotações */
   .anotation {
@@ -1233,3 +1236,4 @@
   display: flex;
   gap: 5px;
 }
+
